@@ -1,11 +1,11 @@
 CREATE TABLE IF NOT EXISTS music_genres (
 	id SERIAL PRIMARY KEY, 
-	name VARCHAR(60) NOT NULL
+	name VARCHAR(60) UNIQUE NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS musicians (
 	id SERIAL PRIMARY KEY, 
-	name VARCHAR(60) NOT NULL
+	name VARCHAR(60) UNIQUE NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS genres_musicians (
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS genres_musicians (
 CREATE TABLE IF NOT EXISTS albums (
 	id SERIAL PRIMARY KEY, 
 	name VARCHAR(60) NOT NULL,
-	release_date DATE
+	release_date INTEGER CHECK(release_date > 1930 and release_date < 2050)
 );
 
 CREATE TABLE IF NOT EXISTS musicians_albums (
@@ -29,14 +29,14 @@ CREATE TABLE IF NOT EXISTS musicians_albums (
 CREATE TABLE IF NOT EXISTS tracks (
 	id SERIAL PRIMARY KEY, 
 	name VARCHAR(60) NOT NULL,
-	duration NUMERIC NOT NULL,
+	duration NUMERIC NOT NULL CHECK(duration > 0 and duration < 10),
 	album_id INTEGER NOT NULL REFERENCES albums(id)
 );
 
 CREATE TABLE IF NOT EXISTS collections (
 	id SERIAL PRIMARY KEY, 
 	name VARCHAR(60) NOT NULL,
-	release_date DATE
+	release_date INTEGER CHECK(release_date > 1930 and release_date < 2050)
 );
 
 CREATE TABLE IF NOT EXISTS tracks_collections (
