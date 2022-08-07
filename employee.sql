@@ -1,0 +1,22 @@
+CREATE TABLE IF NOT EXISTS departments (
+	id SERIAL PRIMARY KEY, 
+	name VARCHAR(60) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS names (
+	id SERIAL PRIMARY KEY, 
+	name VARCHAR(60) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS chiefs (
+	id SERIAL PRIMARY KEY, 
+	name_id INTEGER NOT NULL REFERENCES names(id),
+	department_id INTEGER NOT NULL REFERENCES departments(id)
+);
+
+CREATE TABLE IF NOT EXISTS staff (
+	id SERIAL PRIMARY KEY, 
+	name_id INTEGER NOT NULL REFERENCES names(id),
+	department_id INTEGER NOT NULL REFERENCES departments(id),
+	chief_id INTEGER NOT NULL REFERENCES chiefs(id)
+);
