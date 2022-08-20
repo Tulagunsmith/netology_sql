@@ -12,11 +12,14 @@ SELECT a.name, AVG (duration) FROM tracks
 	GROUP BY a.name
 	ORDER BY AVG (duration) DESC;
 
-SELECT DISTINCT m.name FROM musicians_albums
-	JOIN musicians m ON m.id = musician_id
-	JOIN albums a ON a.id = album_id
-	WHERE release_date != 2020
-	ORDER BY m.name;
+SELECT DISTINCT musicians.name FROM musicians
+  WHERE musicians.name NOT IN (
+    SELECT DISTINCT musicians.name FROM musicians
+    JOIN musicians_albums ON musicians.id = musicians_albums.musician_id
+    JOIN albums ON albums.id = musicians_albums.album_id
+    WHERE albums.release_date = 2020
+    )
+  ORDER BY musicians.name;
 
 SELECT collections.name FROM tracks_collections
 	JOIN collections ON collections.id = collection_id
