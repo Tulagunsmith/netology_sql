@@ -15,13 +15,8 @@ SELECT a.name, AVG (duration) FROM tracks
 SELECT DISTINCT m.name FROM musicians_albums
 	JOIN musicians m ON m.id = musician_id
 	JOIN albums a ON a.id = album_id
-	WHERE release_date != 2020 AND release_date != 2021
-	ORDER BY m.name;
-
-SELECT musicians.name, musician_id, release_date FROM musicians
-	JOIN musicians_albums ON musicians.id = musician_id
-	JOIN albums ON albums.id = album_id
 	WHERE release_date != 2020
+	ORDER BY m.name;
 
 SELECT collections.name FROM tracks_collections
 	JOIN collections ON collections.id = collection_id
@@ -58,4 +53,10 @@ SELECT albums.name FROM albums
 		FROM tracks
 		GROUP BY tracks.album_id) AS mycount2) = COUNT (tracks.album_id)
 	ORDER BY albums.name;
+
+
+
+
+
+
 
