@@ -31,7 +31,7 @@ def create_db():
             cur.execute("""
             CREATE TABLE IF NOT EXISTS emails(
                 id SERIAL PRIMARY KEY,
-                email_adress VARCHAR(90) UNIQUE,
+                email_address VARCHAR(90) UNIQUE,
                 client_id INTEGER NOT NULL REFERENCES clients(id)
             );
             """)
@@ -61,26 +61,41 @@ def create_new_client():
     client_surname = input('Input client surname: ')
     client_phone = input('Input client phone number: ')
     client_email = input('Input client email: ')
-    new_client = Client(client_name, client_surname, client_phone, client_email)
-    return new_client
+    client = Client(client_name, client_surname, client_phone, client_email)
+    return client
 
-    # cur.execute("""
-    # INSERT INTO clients(name, surname)
-    # VALUES('Alexey', 'Sergeev'),
-    # ('Natasha', 'Chesnokova')
-    # """)
-    #
-    # cur.execute("""
-    # INSERT INTO phones(phone_number, client_id)
-    #     VALUES('89066200669', 1),
-    #     ('89520167374', 1),
-    #     ('89301785144', 2)
-    # """)
-    #
-    # cur.execute("""
-    # INSERT INTO emails(email_adress, client_id)
-    # VALUES('someadress@mail.ru', 1),
-    # ('anotheradress@rambler.ru', 2)
-    # """)
-    #
-    # conn.commit()
+
+new_client = create_new_client()
+
+
+def add_new_client(client_name, client_surname, client_phone, client_email):
+    with psycopg2.connect(database='netology_client_db', user="postgres", password="76239") as conn:
+        with conn.cursor() as cur:
+            values = ({'name': client_name, 'surname': client_surname})
+            cur.execute("""
+            INSERT INTO clients(name, surname)
+            VALUES(%(name)s, %(surname)s)
+            RETURNING id
+            """, values)
+
+            person_id = cur.fetchone()
+            values = ({'phone_number': client_phone, 'client_id': person_id})
+
+            cur.execute("""
+            INSERT INTO phones(phone_number, client_id)
+                VALUES(%(phone_number)s, %(client_id)s)
+            """, values)
+
+            values = ({'email_address': client_email, 'client_id': person_id})
+
+            cur.execute("""
+            INSERT INTO emails(email_address, client_id)
+            VALUES(%(email_address)s, %(client_id)s)
+            """, values)
+
+            conn.commit()
+    print('New client added.')
+
+
+create_db()
+add_new_client(new_client.name, new_client.surname, new_client.phone, new_client.email)
