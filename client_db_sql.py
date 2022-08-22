@@ -97,5 +97,21 @@ def add_new_client(client_name, client_surname, client_phone, client_email):
     print('New client added.')
 
 
-create_db()
+# create_db()
 add_new_client(new_client.name, new_client.surname, new_client.phone, new_client.email)
+
+
+def add_phone():
+    person_id = input("Please, input client's id number to add a phone number: ")
+    new_phone_number = input("Input phone number you'd like to add: ")
+    with psycopg2.connect(database='netology_client_db', user="postgres", password="76239") as conn:
+        with conn.cursor() as cur:
+            values = ({'phone_number': new_phone_number, 'client_id': person_id})
+
+            cur.execute("""
+                        INSERT INTO phones(phone_number, client_id)
+                            VALUES(%(phone_number)s, %(client_id)s)
+                        """, values)
+    print('Phone number added.')
+
+add_phone()
