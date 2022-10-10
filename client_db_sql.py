@@ -208,4 +208,10 @@ def delete_client(client_id):
             print('Client deleted.')
 
 
-delete_client(3)
+def find_client(data):
+    with psycopg2.connect(database='netology_client_db', user="postgres", password="76239") as conn:
+        with conn.cursor() as cur:
+            find_query = """SELECT * FROM clients WHERE name = %s"""
+            cur.execute(find_query, (data,))
+            print(cur.fetchall())
+find_client('Sonia')
