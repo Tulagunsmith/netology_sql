@@ -185,3 +185,27 @@ def change_phone(phone, phone_id):
 #         change_phone2(97794444589, 4)
 #         print('Jeronimo!')
 
+
+def delete_phone(phone_id):
+    with psycopg2.connect(database='netology_client_db', user="postgres", password="76239") as conn:
+        with conn.cursor() as cur:
+            del_phone_query = """DELETE FROM phones WHERE id=%s"""
+            cur.execute(del_phone_query, (phone_id,))
+            conn.commit()
+            print('Phone number deleted.')
+
+
+def delete_client(client_id):
+    with psycopg2.connect(database='netology_client_db', user="postgres", password="76239") as conn:
+        with conn.cursor() as cur:
+            del_phone_query = """DELETE FROM phones WHERE client_id=%s"""
+            cur.execute(del_phone_query, (client_id,))
+            del_email_query = """DELETE FROM emails WHERE client_id=%s"""
+            cur.execute(del_email_query, (client_id,))
+            del_client_query = """DELETE FROM clients WHERE id=%s"""
+            cur.execute(del_client_query, (client_id,))
+            conn.commit()
+            print('Client deleted.')
+
+
+delete_client(3)
