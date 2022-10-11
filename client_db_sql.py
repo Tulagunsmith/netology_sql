@@ -115,28 +115,6 @@ def add_phone():
     print('Phone number added.')
 
 
-# def change_name():
-#     change_data = input("""
-#     What would you like to change? Press 'p' for phone,
-#     'e' for email, 'n' for name or 's' for surname
-#     """)
-#     with psycopg2.connect(database='netology_client_db', user="postgres", password="76239") as conn:
-#         with conn.cursor() as cur:
-#             values = ({f'{change_data}': old_name})
-#
-#             cur.execute("""
-#             SELECT name FROM clients(phone_number, client_id)
-#                 VALUES(%(phone_number)s, %(client_id)s)
-#             """, values)
-
-
-class NewData:
-    def __init__(self):
-        self.old_data = ''
-        self.table = ''
-        self.new_data = ''
-
-
 def change_name(name, person_id):
     with psycopg2.connect(database='netology_client_db', user="postgres", password="76239") as conn:
         with conn.cursor() as cur:
@@ -173,19 +151,6 @@ def change_phone(phone, phone_id):
             print('Phone number updated!')
 
 
-# def change_phone2(phone, phone_id):
-#     name_change_query = """UPDATE phones SET phone_number = %s WHERE id =%s"""
-#     cur.execute(name_change_query, (phone, phone_id))
-#     conn.commit()
-#     print('Phone number updated!')
-#
-#
-# with psycopg2.connect(database='netology_client_db', user="postgres", password="76239") as conn:
-#     with conn.cursor() as cur:
-#         change_phone2(97794444589, 4)
-#         print('Jeronimo!')
-
-
 def delete_phone(phone_id):
     with psycopg2.connect(database='netology_client_db', user="postgres", password="76239") as conn:
         with conn.cursor() as cur:
@@ -209,9 +174,30 @@ def delete_client(client_id):
 
 
 def find_client(data):
-    with psycopg2.connect(database='netology_client_db', user="postgres", password="76239") as conn:
-        with conn.cursor() as cur:
-            find_query = """SELECT * FROM clients WHERE name = %s"""
-            cur.execute(find_query, (data,))
-            print(cur.fetchall())
-find_client('Sonia')
+    if type(data) == int:
+        with psycopg2.connect(database='netology_client_db', user="postgres", password="76239") as conn:
+            with conn.cursor() as cur:
+                find_query = """
+                SELECT * FROM clients
+                JOIN emails ON clients.id = client_id
+                JOIN phones ON clients.id = phones.client_id
+                WHERE 
+                phone_number = %s
+                """
+                cur.execute(find_query, (data,))
+                print(cur.fetchall())
+    else:
+        with psycopg2.connect(database='netology_client_db', user="postgres", password="76239") as conn:
+            with conn.cursor() as cur:
+                find_query = """
+                SELECT * FROM clients
+                JOIN emails ON clients.id = client_id
+                JOIN phones ON clients.id = phones.client_id
+                WHERE 
+                name = %s OR
+                surname = %s OR
+                email_address = %s
+                """
+                cur.execute(find_query, (data, data, data))
+                print(cur.fetchall())
+find_client(12345658201)
