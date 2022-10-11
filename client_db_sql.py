@@ -57,15 +57,12 @@ class Client:
 
 
 def create_new_client():
-    client_name = input('Input client name: ')
-    client_surname = input('Input client surname: ')
-    client_phone = input('Input client phone number: ')
-    client_email = input('Input client email: ')
+    client_name = input("Input client's name: ")
+    client_surname = input("Input client's surname: ")
+    client_phone = input("Input client's phone number: ")
+    client_email = input("Input client's email: ")
     client = Client(client_name, client_surname, client_phone, client_email)
     return client
-
-
-# new_client = create_new_client()
 
 
 def add_new_client(client_name, client_surname, client_phone, client_email):
@@ -97,10 +94,6 @@ def add_new_client(client_name, client_surname, client_phone, client_email):
     print('New client added.')
 
 
-# create_db()
-# add_new_client(new_client.name, new_client.surname, new_client.phone, new_client.email)
-
-
 def add_phone():
     person_id = input("Please, input client's id number to add a phone number: ")
     new_phone_number = input("Input phone number you'd like to add: ")
@@ -115,7 +108,9 @@ def add_phone():
     print('Phone number added.')
 
 
-def change_name(name, person_id):
+def change_name():
+    person_id = input("Please, input client's id number to change the name: ")
+    name = input("Input the new name: ")
     with psycopg2.connect(database='netology_client_db', user="postgres", password="76239") as conn:
         with conn.cursor() as cur:
             name_change_query = """UPDATE clients SET name = %s WHERE id =%s"""
@@ -124,7 +119,9 @@ def change_name(name, person_id):
             print('Name updated!')
 
 
-def change_surname(surname, person_id):
+def change_surname():
+    person_id = input("Please, input client's id number to change the surname: ")
+    surname = input("Input the new surname: ")
     with psycopg2.connect(database='netology_client_db', user="postgres", password="76239") as conn:
         with conn.cursor() as cur:
             name_change_query = """UPDATE clients SET surname = %s WHERE id =%s"""
@@ -133,7 +130,9 @@ def change_surname(surname, person_id):
             print('Surname updated!')
 
 
-def change_email(email, person_id):
+def change_email():
+    person_id = input("Please, input client's id number to change the email: ")
+    email = input("Input the new email: ")
     with psycopg2.connect(database='netology_client_db', user="postgres", password="76239") as conn:
         with conn.cursor() as cur:
             name_change_query = """UPDATE emails SET email_address = %s WHERE id =%s"""
@@ -142,7 +141,9 @@ def change_email(email, person_id):
             print('Email updated!')
 
 
-def change_phone(phone, phone_id):
+def change_phone():
+    phone_id = input("Please, input phone's id to change the phone: ")
+    phone = input("Input the new phone number: ")
     with psycopg2.connect(database='netology_client_db', user="postgres", password="76239") as conn:
         with conn.cursor() as cur:
             name_change_query = """UPDATE phones SET phone_number = %s WHERE id =%s"""
@@ -151,7 +152,8 @@ def change_phone(phone, phone_id):
             print('Phone number updated!')
 
 
-def delete_phone(phone_id):
+def delete_phone():
+    phone_id = input("Please, input phone's id to delete the phone: ")
     with psycopg2.connect(database='netology_client_db', user="postgres", password="76239") as conn:
         with conn.cursor() as cur:
             del_phone_query = """DELETE FROM phones WHERE id=%s"""
@@ -160,7 +162,8 @@ def delete_phone(phone_id):
             print('Phone number deleted.')
 
 
-def delete_client(client_id):
+def delete_client():
+    client_id = input("Please, input client's id to delete: ")
     with psycopg2.connect(database='netology_client_db', user="postgres", password="76239") as conn:
         with conn.cursor() as cur:
             del_phone_query = """DELETE FROM phones WHERE client_id=%s"""
@@ -173,8 +176,9 @@ def delete_client(client_id):
             print('Client deleted.')
 
 
-def find_client(data):
-    if type(data) == int:
+def find_client():
+    data = input("Please, input name, surname, phone or email to find the person: ")
+    if data.isdigit():
         with psycopg2.connect(database='netology_client_db', user="postgres", password="76239") as conn:
             with conn.cursor() as cur:
                 find_query = """
@@ -200,4 +204,55 @@ def find_client(data):
                 """
                 cur.execute(find_query, (data, data, data))
                 print(cur.fetchall())
-find_client(12345658201)
+
+
+def user_help():
+    print(
+        'Список комманд:',
+        '1 - добавить нового клиента в базу данных',
+        '2 - добавить телефон существующему клиенту',
+        '3 - изменить имя существующего клиента',
+        '4 - изменить фамилию существующего клиента',
+        '5 - изменить телефон существующего клиента',
+        '6 - изменить адрес эл. почты существующего клиента',
+        '7 - удалить телефон для существующего клиента',
+        '8- удалить существующего клиента',
+        '9 - найти клиента по его данным (имени, фамилии, email-у или телефону)',
+        '0 - выведет список команд',
+        '"q" - выход',
+        sep='\n'
+    )
+
+
+def doomsday_book():
+    create_db()
+    user_help()
+    while True:
+        command = input('Введите вашу команду: ')
+        if command == '1':
+            new_client = create_new_client()
+            add_new_client(new_client.name, new_client.surname, new_client.phone, new_client.email)
+        elif command == '2':
+            add_phone()
+        elif command == '3':
+            change_name()
+        elif command == '4':
+            change_surname()
+        elif command == '5':
+            change_phone()
+        elif command == '6':
+            change_email()
+        elif command == '7':
+            delete_phone()
+        elif command == '8':
+            delete_client()
+        elif command == '9':
+            find_client()
+        elif command == '0':
+            user_help()
+        elif command == 'q':
+            print('Выход')
+            break
+
+
+doomsday_book()
