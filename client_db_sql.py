@@ -209,6 +209,7 @@ def find_client():
 def user_help():
     print(
         'Список комманд:',
+        '"db" - создать базу данных',
         '1 - добавить нового клиента в базу данных',
         '2 - добавить телефон существующему клиенту',
         '3 - изменить имя существующего клиента',
@@ -225,11 +226,12 @@ def user_help():
 
 
 def doomsday_book():
-    create_db()
     user_help()
     while True:
         command = input('Введите вашу команду: ')
-        if command == '1':
+        if command == 'db':
+            create_db()
+        elif command == '1':
             new_client = create_new_client()
             add_new_client(new_client.name, new_client.surname, new_client.phone, new_client.email)
         elif command == '2':
