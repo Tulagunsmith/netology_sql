@@ -1,2 +1,4 @@
 task_1/
 *.drawio
+db_data.py
+__pycache__/
