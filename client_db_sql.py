@@ -1,4 +1,10 @@
 import psycopg2
+from db_data import database, user, password
+
+
+DATABASE = database
+USER = user
+PASSWORD = password
 
 
 def create_db():
@@ -234,7 +240,7 @@ def doomsday_book():
             break
 
 
-with psycopg2.connect(database='netology_client_db', user="postgres", password="76239") as conn:
+with psycopg2.connect(database=DATABASE, user=USER, password=PASSWORD) as conn:
     with conn.cursor() as cur:
         doomsday_book()
 
