@@ -2,3 +2,4 @@ task_1/
 *.drawio
 db_data.py
 __pycache__/
+orm_lection_copy
