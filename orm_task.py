@@ -1,5 +1,6 @@
 import sqlalchemy as sq
 import json
+from sqlalchemy import or_
 from sqlalchemy.orm import declarative_base, relationship, sessionmaker
 
 
@@ -101,3 +102,12 @@ for record in data:
     }[record.get('model')]
     session.add(model(id=record.get('pk'), **record.get('fields')))
 session.commit()
+
+
+def print_publisher():
+    user_data = input('Enter publisher name or id number: ')
+    for c in session.query(Publisher).filter(or_(Publisher.id == user_data, Publisher.name == user_data)).all():
+        print(c)
+
+
+print_publisher()
