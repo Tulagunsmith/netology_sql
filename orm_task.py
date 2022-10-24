@@ -1,5 +1,5 @@
 import sqlalchemy as sq
-from sqlalchemy.orm import declarative_base, relationship
+from sqlalchemy.orm import declarative_base, relationship, sessionmaker
 
 
 Base = declarative_base()
@@ -64,7 +64,7 @@ class Sale(Base):
 
     id = sq.Column(sq.Integer, primary_key=True)
     price = sq.Column(sq.Float, nullable=False)
-    date_sale = sq.Column(sq.DateTime, sq.ForeignKey("shop.id"), nullable=False)
+    date_sale = sq.Column(sq.DateTime, nullable=False)
     id_stock = sq.Column(sq.Integer, sq.ForeignKey("stock.id"), nullable=False)
     count = sq.Column(sq.Integer, nullable=False)
 
@@ -79,3 +79,7 @@ def create_table(engine):
     Base.metadata.create_all(engine)
 
 
+DSN = 'postgresql://postgres:7623@localhost:5432/netology_orm_test'
+engine = sq.create_engine(DSN)
+
+create_table(engine)
