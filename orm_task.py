@@ -16,7 +16,7 @@ class Publisher(Base):
     books = relationship("Book", back_populates="publisher")
 
     def __str__(self):
-        return f'Publisher {self.id}: {self.name}'
+        return f'Publisher {self.id}: {self.name}, {self.books}'
 
 
 class Shop(Base):
@@ -106,8 +106,22 @@ session.commit()
 
 def print_publisher():
     user_data = input('Enter publisher name or id number: ')
-    for c in session.query(Publisher).filter(or_(Publisher.id == user_data, Publisher.name == user_data)).all():
-        print(c)
+    if user_data.isdigit():
+        for c in session.query(Publisher).filter(Publisher.id == user_data).all():
+            print(c)
+    else:
+        for c in session.query(Publisher).filter(Publisher.name == user_data).all():
+            print(c)
 
 
 print_publisher()
+
+# subq = session.query(Publisher).filter(Publisher.id == user_data).subquery()
+#         for c in session.query(Book).join(subq, Book.id_publisher == subq.c.id).all():
+#             print(c)
+
+
+# subq = session.query(Book).subquery()
+#         print(subq)
+#         for c in session.query(Publisher).join(subq, Publisher.id == subq.c.id_publisher).filter(Publisher.id == user_data).all():
+#             print(c)
