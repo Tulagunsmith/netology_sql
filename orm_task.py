@@ -1,7 +1,5 @@
 import sqlalchemy as sq
-import json
-from sqlalchemy import or_
-from sqlalchemy.orm import declarative_base, relationship, sessionmaker
+from sqlalchemy.orm import declarative_base, relationship
 
 
 Base = declarative_base()
@@ -81,47 +79,6 @@ def create_table(engine):
     Base.metadata.create_all(engine)
 
 
-DSN = 'postgresql://postgres:76239@localhost:5432/netology_orm_test'
-engine = sq.create_engine(DSN)
-
-create_table(engine)
-
-Session = sessionmaker(bind=engine)
-session = Session()
-
-with open('fixtures.json', 'r') as fd:
-    data = json.load(fd)
-
-for record in data:
-    model = {
-        'publisher': Publisher,
-        'shop': Shop,
-        'book': Book,
-        'stock': Stock,
-        'sale': Sale,
-    }[record.get('model')]
-    session.add(model(id=record.get('pk'), **record.get('fields')))
-session.commit()
 
 
-def print_publisher():
-    user_data = input('Enter publisher name or id number: ')
-    if user_data.isdigit():
-        for c in session.query(Publisher).filter(Publisher.id == user_data).all():
-            print(c)
-    else:
-        for c in session.query(Publisher).filter(Publisher.name == user_data).all():
-            print(c)
 
-
-print_publisher()
-
-# subq = session.query(Publisher).filter(Publisher.id == user_data).subquery()
-#         for c in session.query(Book).join(subq, Book.id_publisher == subq.c.id).all():
-#             print(c)
-
-
-# subq = session.query(Book).subquery()
-#         print(subq)
-#         for c in session.query(Publisher).join(subq, Publisher.id == subq.c.id_publisher).filter(Publisher.id == user_data).all():
-#             print(c)
