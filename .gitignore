@@ -3,3 +3,4 @@ task_1/
 db_data.py
 __pycache__/
 orm_lection_copy
+.env
